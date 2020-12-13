@@ -1,0 +1,9 @@
+[package]
+name = "turing-machine"
+description = "Library for turing machine construction, simulation."
+version = "0.1.0"
+authors = ["SunHao-0 <sunhaoyl@outlook.com>"]
+edition = "2018"
+
+[dependencies]
+rustc-hash = "*"
