@@ -16,12 +16,11 @@ pub fn tm_foo() -> TM {
         .build()
         .unwrap()
 }
-use turing_machine::*;
 
 fn main() {
     let tm = tm_foo();
     let mut runner = Runner::with_tm(&tm);
-    runner.feed_str("aaaaaabbbbbb");
+    runner.feed_str("aaaaaa");
     loop {
         let ir = runner.ir();
         println!("{}", ir);
