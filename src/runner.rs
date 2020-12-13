@@ -157,6 +157,17 @@ pub struct IR<'a> {
     runner_state: RunnerState,
 }
 
+impl IR<'_> {
+    pub fn tape_str(&self) -> String {
+        self.left_tape
+            .iter()
+            .copied()
+            .rev()
+            .chain(self.right_tape.iter().copied())
+            .collect::<String>()
+    }
+}
+
 impl fmt::Display for IR<'_> {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         // write state first.
