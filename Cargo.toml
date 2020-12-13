@@ -6,4 +6,4 @@ authors = ["SunHao-0 <sunhaoyl@outlook.com>"]
 edition = "2018"
 
 [dependencies]
-rustc-hash = "*"
+rustc-hash = "1.1.0"
