@@ -8,13 +8,16 @@ pub fn tm_multiply() -> TM {
         .states(vec![
             "q1", "q2", "q3", "q4", "q5", "q6", "q7", "q8", "q9", "q10", "q10", "q11",
         ])
-        .syms(vec!['0', '1'])
+        .syms(vec!['0', '1', '$' /*for 0*/])
         .tape_sym('X')
         .empty_sym('B')
         .transfer_fns(vec![
             TransferFnItem::new()
                 .from("q0", '0')
                 .to("q6", Some('B'), HeadDirection::Right),
+            TransferFnItem::new()
+                .from("q0", '$')
+                .to("q10", Some('B'), HeadDirection::Right),
             TransferFnItem::new()
                 .from("q6", '0')
                 .to("q6", None, HeadDirection::Right),
@@ -94,9 +97,17 @@ fn main() {
     stdout().flush().unwrap();
     stdin().read_line(&mut n2).unwrap();
 
-    let n1: u8 = n1.trim().parse().unwrap();
-    let n2: u8 = n2.trim().parse().unwrap();
-    let input_str = format!("{}1{}1", "0".repeat(n1 as usize), "0".repeat(n2 as usize));
+    let mut n1: u8 = n1.trim().parse().unwrap();
+    let mut n2: u8 = n2.trim().parse().unwrap();
+    if n2 == 0 {
+        std::mem::swap(&mut n1, &mut n2);
+    }
+    let n1_tape_str = if n1 == 0 {
+        "$".to_string()
+    } else {
+        "0".repeat(n1 as usize)
+    };
+    let input_str = format!("{}1{}1", n1_tape_str, "0".repeat(n2 as usize));
     let mut runner = Runner::with_tm(&tm);
     println!("====== INPUT STR ======");
     println!("{}", input_str);
@@ -104,9 +115,13 @@ fn main() {
     runner.feed_str(&input_str);
     while runner.step() == RunnerState::Running {}
     let tape_str = runner.ir().tape_str();
-    let result = tape_str.trim_matches('B').len();
     println!("====== RESULT ======");
-    println!("{}", num_to_text(result as u16));
+    if runner.step() == RunnerState::Accept {
+        let result = tape_str.trim_matches('B').len();
+        println!("{}", num_to_text(result as u16));
+    } else {
+        println!("Reject: {}", tape_str);
+    }
 }
 
 const NUM_TEXTS: [&str; 10] = [
@@ -245,7 +260,7 @@ const NUM_TEXTS: [&str; 10] = [
 pub fn num_to_text(mut n: u16) -> String {
     let text_height: usize = NUM_TEXTS[0].lines().count();
 
-    let mut ns = Vec::new();
+    let mut ns = if n == 0 { vec![0] } else { Vec::new() };
     while n != 0 {
         let t = n % 10;
         n -= t;
