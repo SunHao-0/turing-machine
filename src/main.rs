@@ -29,7 +29,7 @@ fn main() {
 
     let mut runner = Runner::with_tm(&tm);
     runner.feed_str(input);
-    while runner.step() != RunnerState::Accept {
+    while runner.step() == RunnerState::Running {
         if verbose {
             println!("{}", runner.ir());
         }
