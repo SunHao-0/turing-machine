@@ -1,0 +1,17 @@
+ROOT = _{SOI ~ TuringExp ~ EOI}
+TuringExp = _{StateSet? ~ SymbolSet ~ TapeSymbolSet? ~ TransferFnSet ~ Start? ~ FinalSet ~ Empty?}
+StateSet = {"StateSet" ~ "=" ~ "{" ~ Ident ~ ("," ~ Ident)* ~ "}" ~ ";"}
+SymbolSet = {"SymbolSet" ~ "=" ~ "{" ~ Symbol ~ ("," ~ Symbol)* ~ "}" ~ ";"}
+TapeSymbolSet = {"TSymbolSet" ~ "=" ~ "{" ~ Symbol ~ ("," ~ Symbol)* ~ "}" ~ ";"}
+TransferFnSet = {"FnSet" ~ "=" ~ "{" ~ TransferFn ~ ("," ~ TransferFn)* ~ "}" ~ ";"}
+TransferFn = {"(" ~ Ident ~ "," ~ Symbol ~ ")" ~ "->" ~ "(" ~ Ident ~ "," ~ Symbol ~ "," ~ Direction ~ ")" }
+Start = {"Start" ~ "=" ~ Ident ~ ";"}
+FinalSet = { "FinalSet" ~  "=" ~ "{" ~ Ident ~ ("," ~ Ident)* ~ "}" ~ ";"}
+Empty = {"Empty" ~ "=" ~ Symbol ~ ";"}
+Ident = @{ASCII_ALPHA ~ (ASCII_ALPHA | ASCII_DIGIT)+}
+Symbol = {ASCII_ALPHANUMERIC}
+Direction = {"L" | "R" | "S"}
+
+WHITESPACE  = _{ " " | "\n" | "\t" | "\r" }
+COMMENT = _{ "#" ~ (!NEWLINE ~ ANY) ~ NEWLINE}
+//  "/*" ~ (!"*/" ~ ANY)* ~ "*/"  | 

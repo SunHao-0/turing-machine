@@ -102,6 +102,15 @@ impl TransferFnItem {
         self.to = Some((s.into(), sym, dir));
         self
     }
+
+    pub fn syms(&self) -> (Symbol, Symbol) {
+        let sym = self.from.as_ref().unwrap().1;
+        (sym, self.to.as_ref().unwrap().1.unwrap_or(sym))
+    }
+
+    pub fn states(&self) -> (&str, &str) {
+        (&self.from.as_ref().unwrap().0, &self.to.as_ref().unwrap().0)
+    }
 }
 
 #[derive(Default)]

@@ -1,6 +1,11 @@
+#[macro_use]
+extern crate pest_derive;
+
+pub mod parse;
 pub mod runner;
 pub mod tm;
 
+pub use parse::*;
 pub use runner::*;
 pub use tm::*;
 

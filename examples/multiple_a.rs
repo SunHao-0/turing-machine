@@ -1,20 +1,25 @@
+use std::process::exit;
 use turing_machine::*;
 
 pub fn tm_foo() -> TM {
-    TMBuilder::new()
-        .start_state("q0")
-        .accept_state("q1")
-        .sym('a')
-        .transfer_fns(vec![
-            TransferFnItem::new()
-                .from("q0", 'a')
-                .to("q0", None, HeadDirection::Right),
-            TransferFnItem::new()
-                .from("q0", 'B')
-                .to("q1", None, HeadDirection::Left),
-        ])
-        .build()
-        .unwrap()
+    let tm = "
+    // StateSet={q0, q1}; ignore state set
+    SymbolSet = {a};
+    // TSymbolSet = {a, B}; ignore tape symbol set.
+    FnSet = {
+        (q0, a) -> (q0, a, R),
+        (q0, B) -> (q1, B, L)
+    };
+    // ignore start state
+    // Start = q0;
+    FinalSet = {q1};
+    // Empty = B;
+    ";
+    parse(tm).unwrap_or_else(|e| {
+        eprintln!("{}", tm.escape_debug());
+        eprintln!("{}", e);
+        exit(1)
+    })
 }
 
 fn main() {
