@@ -73,14 +73,9 @@ pub fn parse<T: AsRef<str>>(content: T) -> Result<TM, Error> {
 
     let mut empty = 'B';
     if let Some(p) = pt.next() {
-        empty = p
-            .into_inner()
-            .next()
-            .unwrap()
-            .as_str()
-            .chars()
-            .next()
-            .unwrap();
+        if p.as_rule() == Rule::Empty {
+            empty = parse_symbol(p.into_inner().next().unwrap());
+        }
     }
     TMBuilder::new()
         .states(states)
